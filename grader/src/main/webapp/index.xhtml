@@ -1,0 +1,68 @@
+<f:view xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ng="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:prime="http://primefaces.org/ui">
+	
+	<f:event type="preRenderView" listener="#{userSessionBean.forwardToLogin}"/>
+	
+	<h:head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>Grader -- Welcome!</title>
+	</h:head>
+	<h:body>
+			<prime:messages id="messages" showDetail="true" autoUpdate="true"/>
+			<prime:panel header="Welcome to Grader!" >
+				<div style="height:50px">
+					Choose one of the activities below to work with!
+				</div>
+			</prime:panel>
+			<prime:panel header="User Information">
+				Welcome, #{userSessionBean.currentUser.firstName}!
+				<br/>
+				Are you an admin? #{userSessionBean.isAdmin}
+				<br/>
+				Are you a teacher? #{userSessionBean.isTeacher}
+				<br/>
+				Are you a student? #{userSessionBean.isStudent}
+			</prime:panel>
+			<h:panelGrid columns="2">
+				<prime:panel header="Add a new user!" rendered="#{userSessionBean.isAdmin}">
+					Enter in information to create a new user!
+					<h:form>
+						<h:panelGrid columns="2">
+							<h:outputText value="First Name: " />
+							<prime:inputText id="first_name_txt" value="#{adminBean.newUserFirstName}"/>
+							
+							<h:outputText value="Last Name: "/>
+							<prime:inputText id="last_name_txt" value="#{adminBean.newUserLastName}"/>
+						</h:panelGrid>
+						<prime:selectManyCheckbox id="role_chkbox" value="#{adminBean.roles}">
+							<f:selectItem itemLabel="Admin" itemValue="admin"/>
+							<f:selectItem itemLabel="Teacher" itemValue="teacher"/>
+							<f:selectItem itemLabel="Student" itemValue="student"/>
+						</prime:selectManyCheckbox>
+						<prime:commandButton id="add_user_btn" value="Save!" action="#{adminBean.createNewUser}"/>
+					</h:form>
+				</prime:panel>
+				<prime:panel header="Change Your password!">
+					<prime:messages for="pwd_messages"/>
+					Please fill out the fields to change your password!
+					<h:form>
+						<h:panelGrid columns="2">
+							<h:outputText value="Old Password"/>
+							<prime:password id="old_password_pwd" value="#{indexBean.oldPassword}"/>
+							<h:outputText value="New Password"/>
+							<prime:password id="new_password_pwd" value="#{indexBean.newPasswordOne}"/>
+							<h:outputText value="Confirm Password"/>
+							<prime:password id="confirm_password_pwd" value="#{indexBean.newPasswordTwo}"/>
+						</h:panelGrid>
+						<prime:commandButton id="update_password_btn" process="@form"
+						value="Update Password" action="#{indexBean.updatePassword}"/>
+					</h:form>
+				</prime:panel>
+			</h:panelGrid>
+	</h:body>
+</f:view>
