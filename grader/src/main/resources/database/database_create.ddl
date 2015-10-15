@@ -9,6 +9,38 @@ CREATE TABLE `admin` (
   CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
+CREATE TABLE `class` (
+  `class_id` int(11) NOT NULL AUTO_INCREMENT,
+  `class_name` varchar(45) NOT NULL,
+  `class_code` varchar(45) NOT NULL,
+  PRIMARY KEY (`class_id`),
+  UNIQUE KEY `class_id_UNIQUE` (`class_id`),
+  UNIQUE KEY `class_code_UNIQUE` (`class_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `class_semester` (
+  `class_semester_id` int(11) NOT NULL AUTO_INCREMENT,
+  `class_id` int(11) NOT NULL,
+  `semester_id` int(11) NOT NULL,
+  `teacher_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`class_semester_id`),
+  UNIQUE KEY `class_semester_id_UNIQUE` (`class_semester_id`),
+  KEY `class_FK_idx` (`class_id`),
+  KEY `semester_FK_idx` (`semester_id`),
+  KEY `teacher_FK_idx` (`teacher_id`),
+  CONSTRAINT `class_FK` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `semester_FK` FOREIGN KEY (`semester_id`) REFERENCES `semester` (`semester_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `teacher_FK` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`teacher_id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `semester` (
+  `semester_id` int(11) NOT NULL AUTO_INCREMENT,
+  `semester_name` varchar(45) NOT NULL,
+  `year` int(11) NOT NULL,
+  PRIMARY KEY (`semester_id`),
+  UNIQUE KEY `semester_id_UNIQUE` (`semester_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `student` (
   `student_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,

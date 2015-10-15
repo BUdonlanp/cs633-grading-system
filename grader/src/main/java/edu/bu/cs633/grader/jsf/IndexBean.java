@@ -7,7 +7,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.print.attribute.standard.Severity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;

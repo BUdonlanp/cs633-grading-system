@@ -73,16 +73,19 @@ public class UserService {
 			Admin a = new Admin();
 			a.setUser(user);
 			adminRepo.save(a);
+			user.setAdmin(a);
 		}
 		if(isTeacher){
 			Teacher a = new Teacher();
 			a.setUser(user);
 			teacherRepo.save(a);
+			user.setTeacher(a);
 		}
 		if(isStudent){
 			Student a = new Student();
 			a.setUser(user);
 			studentRepo.save(a);
+			user.setStudent(a);
 		}
 		
 		return user;

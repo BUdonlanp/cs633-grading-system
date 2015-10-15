@@ -3,15 +3,13 @@
  */
 package edu.bu.cs633.grader.entity;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -34,34 +32,32 @@ public class User {
 
 	private String password;
 
-	@OneToMany(mappedBy="user", fetch=FetchType.EAGER)
-	private List<Admin> admin;
+	@OneToOne(mappedBy="user", fetch=FetchType.EAGER)
+	private Admin admin;
 
-	@OneToMany(mappedBy="user", fetch=FetchType.EAGER)
-	private List<Teacher> teacher;
+	@OneToOne(mappedBy="user", fetch=FetchType.EAGER)
+	private Teacher teacher;
 
-	@OneToMany(mappedBy="user", fetch=FetchType.EAGER)
-	private List<Student> student;
+	@OneToOne(mappedBy="user", fetch=FetchType.EAGER)
+	private Student student;
 
 	/**
 	 * Default constructor
 	 */
 	public User() {
-		admin = new ArrayList<Admin>();
-		teacher = new ArrayList<Teacher>();
-		student = new ArrayList<Student>();
+		
 	}
 
 	public boolean isAdmin() {
-		return null != admin && !admin.isEmpty();
+		return null != admin;
 	}
 
 	public boolean isTeacher() {
-		return null != teacher && !teacher.isEmpty();
+		return null != teacher;
 	}
 
 	public boolean isStudent() {
-		return null != student && !student.isEmpty();
+		return null != student;
 	}
 
 	public String toString() {
@@ -149,7 +145,7 @@ public class User {
 	/**
 	 * @return the admin
 	 */
-	public List<Admin> getAdmin() {
+	public Admin getAdmin() {
 		return admin;
 	}
 
@@ -157,14 +153,14 @@ public class User {
 	 * @param admin
 	 *            the admin to set
 	 */
-	public void setAdmin(List<Admin> admin) {
+	public void setAdmin(Admin admin) {
 		this.admin = admin;
 	}
 
 	/**
 	 * @return the teacher
 	 */
-	public List<Teacher> getTeacher() {
+	public Teacher getTeacher() {
 		return teacher;
 	}
 
@@ -172,14 +168,14 @@ public class User {
 	 * @param teacher
 	 *            the teacher to set
 	 */
-	public void setTeacher(List<Teacher> teacher) {
+	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
 	}
 
 	/**
 	 * @return the student
 	 */
-	public List<Student> getStudent() {
+	public Student getStudent() {
 		return student;
 	}
 
@@ -187,7 +183,7 @@ public class User {
 	 * @param student
 	 *            the student to set
 	 */
-	public void setStudent(List<Student> student) {
+	public void setStudent(Student student) {
 		this.student = student;
 	}
 
