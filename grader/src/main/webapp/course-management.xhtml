@@ -1,0 +1,71 @@
+<f:view xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ng="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:prime="http://primefaces.org/ui">
+	
+	<f:event type="preRenderView" listener="#{userSessionBean.forwardToIndexForAdminPage}"/>
+	
+	<h:head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>Grader -- Admin Course Management</title>
+	</h:head>
+	<h:body>
+			<prime:panel header="Grader Course Admin Management" >
+				<div style="height:50px">
+					Choose one of the activities below to work with!
+				</div>
+			</prime:panel>
+			<prime:messages id="messages" showDetail="true" autoUpdate="true"/>
+			<prime:panel header="Create Semesters">
+				Create a semester below!
+				<h:form id="semester_form">
+					<h:panelGrid columns="2">
+						<h:outputText value="Year: "/>
+						<prime:spinner id="year_input" value="#{courseManageBean.year}" required="true" size="4"/>
+						<h:outputText value="Semester: "/>
+						<prime:selectOneMenu id="semester_menu" value="#{courseManageBean.selectSemester}">
+							<f:selectItem itemLabel="Fall" itemValue="Fall"/>
+							<f:selectItem itemLabel="Spring" itemValue="Spring"/>
+							<f:selectItem itemLabel="Summer" itemValue="Summer"/>
+						</prime:selectOneMenu>
+					</h:panelGrid>
+					<prime:commandButton id="semester_btn" value="Create Semester" action="#{courseManageBean.createSemester}" process="@form" update="@all"/>
+				</h:form>
+			</prime:panel>
+			<prime:panel header="Create Course">
+				Create a new course below!
+				<h:form id="course_form">
+					<h:panelGrid columns="2">
+						<h:outputText value="Course Code: "/>
+						<prime:inputText id="course_code_input" value="#{courseManageBean.courseCode}"/>
+						<h:outputText value="Course Name: "/>
+						<prime:inputText id="course_name_input" value="#{courseManageBean.courseName}"/>
+					</h:panelGrid>
+					<prime:commandButton id="course_btn" value="Create Course" action="#{courseManageBean.createCourse}" process="@form" update="@all"/>
+				</h:form>
+			</prime:panel>
+			<prime:panel header="Assign a Teacher">
+				Create a course instance below.
+				<h:form id="instance_form">
+					<h:panelGrid columns="2">
+						<h:outputText value="Course: "/>
+						<prime:selectOneMenu id="course_select_menu" filter="true" filterMatchMode="startsWith" value="#{courseManageBean.selectedCourse}">
+							<f:selectItems value="#{courseManageBean.courseSelect}"/>
+						</prime:selectOneMenu>
+						<h:outputText value="Semester: "/>
+						<prime:selectOneMenu id="semester_select_menu" filter="true" filterMatchMode="startsWith" value="#{courseManageBean.selectedSemester}">
+							<f:selectItems value="#{courseManageBean.semesterSelect}"/>
+						</prime:selectOneMenu>
+						<h:outputText value="Teacher: "/>
+						<prime:selectOneMenu id="teacher_select_menu" filter="true" filterMatchMode="startsWith" value="#{courseManageBean.selectedTeacher}">
+							<f:selectItems value="#{courseManageBean.teacherSelect}"/>
+						</prime:selectOneMenu>
+					</h:panelGrid>
+					<prime:commandButton id="instance_btn" value="Create Instance" action="#{courseManageBean.createCourseInstance}" process="@form" update="@all"/>
+				</h:form>
+			</prime:panel>
+	</h:body>
+</f:view>

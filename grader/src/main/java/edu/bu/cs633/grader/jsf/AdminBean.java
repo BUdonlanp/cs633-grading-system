@@ -51,8 +51,9 @@ public class AdminBean {
 		
 		//Save the user
 		User newUser = userService.createUser(newUserFirstName, newUserLastName, isAdmin, isTeacher, isStudent);
-		
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Created new user: " + newUser.getUsername()));
+		if(newUser != null){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Created new user: " + newUser.getUsername()));			
+		}
 	}
 
 	/**

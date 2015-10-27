@@ -43,14 +43,14 @@ public class IndexBean {
 				user.setPassword(newPasswordOne);
 				user = userService.saveUser(user);
 				userSessionBean.setCurrentUser(user);
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Password updated!"));
+				FacesContext.getCurrentInstance().addMessage("pwd_messages", new FacesMessage("Password updated!"));
 			} else {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, 
+				FacesContext.getCurrentInstance().addMessage("pwd_messages", new FacesMessage(FacesMessage.SEVERITY_WARN, 
 						"Passwords do not match!", "Please make sure the two passwords match!"));
 				
 			}
 		} else {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, 
+			FacesContext.getCurrentInstance().addMessage("pwd_messages", new FacesMessage(FacesMessage.SEVERITY_WARN, 
 					"Incorrect password!", "Please enter the correct current password!"));
 		}
 	}

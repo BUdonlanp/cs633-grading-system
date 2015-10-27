@@ -19,23 +19,27 @@
 					Choose one of the activities below to work with!
 				</div>
 			</prime:panel>
-			<prime:panel header="User Information">
-				Welcome, #{userSessionBean.currentUser.firstName}!
-				<br/>
-				Are you an admin? #{userSessionBean.isAdmin}
-				<br/>
-				Are you a teacher? #{userSessionBean.isTeacher}
-				<br/>
-				Are you a student? #{userSessionBean.isStudent}
-			</prime:panel>
-			<h:panelGrid columns="2">
+			<h:panelGrid columns="2" style="width:100%">
+				<prime:panel header="User Information">
+					Welcome, #{userSessionBean.currentUser.firstName}!
+					<br/>
+					Are you an admin? #{userSessionBean.isAdmin}
+					<br/>
+					Are you a teacher? #{userSessionBean.isTeacher}
+					<br/>
+					Are you a student? #{userSessionBean.isStudent}
+				</prime:panel>
+				<prime:panel header="Available Actions">
+					<h:panelGrid columns="1">
+						<h:link value="Admin Course Management" rendered="#{userSessionBean.isAdmin}" outcome="course-management"/>
+					</h:panelGrid>
+				</prime:panel>
 				<prime:panel header="Add a new user!" rendered="#{userSessionBean.isAdmin}">
 					Enter in information to create a new user!
 					<h:form>
 						<h:panelGrid columns="2">
 							<h:outputText value="First Name: " />
 							<prime:inputText id="first_name_txt" value="#{adminBean.newUserFirstName}"/>
-							
 							<h:outputText value="Last Name: "/>
 							<prime:inputText id="last_name_txt" value="#{adminBean.newUserLastName}"/>
 						</h:panelGrid>
@@ -47,7 +51,7 @@
 						<prime:commandButton id="add_user_btn" value="Save!" action="#{adminBean.createNewUser}"/>
 					</h:form>
 				</prime:panel>
-				<prime:panel header="Change Your password!">
+				<prime:panel header="Change Your password!" toggleable="true">
 					<prime:messages for="pwd_messages"/>
 					Please fill out the fields to change your password!
 					<h:form>

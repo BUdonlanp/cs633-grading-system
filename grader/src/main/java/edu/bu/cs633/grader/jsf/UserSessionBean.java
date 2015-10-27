@@ -37,6 +37,22 @@ public class UserSessionBean {
 		}
 	}
 	
+	public void forwardToIndexForAdminPage(ComponentSystemEvent cse){
+		if(isLoggedIn()){
+			if(!getIsAdmin()){
+				FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(
+						FacesContext.getCurrentInstance(), 
+						null, 
+						"/index.jsf?faces-redirect=true");
+			}
+		} else {
+			FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(
+					FacesContext.getCurrentInstance(), 
+					null, 
+					"/login.jsf?faces-redirect=true");
+		}
+	}
+	
 	//Easy accessors
 	
 	/**

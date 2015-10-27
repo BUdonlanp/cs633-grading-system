@@ -3,8 +3,10 @@
  */
 package edu.bu.cs633.grader.jsf;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,6 +37,8 @@ public class LoginBean {
 		if(user != null){
 			userSessionBean.setCurrentUser(user);
 			ret = "index.jsf?faces-redirect=true";
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Incorrect login information, please try again!"));
 		}
 		return ret;
 	}

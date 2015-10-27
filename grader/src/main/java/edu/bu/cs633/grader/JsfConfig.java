@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
 import edu.bu.cs633.grader.jsf.AdminBean;
+import edu.bu.cs633.grader.jsf.CourseManagementBean;
 import edu.bu.cs633.grader.jsf.IndexBean;
 import edu.bu.cs633.grader.jsf.LoginBean;
 import edu.bu.cs633.grader.jsf.UserSessionBean;
@@ -41,6 +42,12 @@ public class JsfConfig {
 	@Scope(value="session")
 	public UserSessionBean userSessionBean(){
 		return new UserSessionBean();
+	}
+	
+	@Bean
+	@Scope(value="request")
+	public CourseManagementBean courseManageBean(){
+		return new CourseManagementBean();
 	}
 	
 }

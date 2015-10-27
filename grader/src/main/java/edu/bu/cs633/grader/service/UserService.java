@@ -117,4 +117,17 @@ public class UserService {
 		return retList;
 	}
 	
+	public List<Teacher> getAllTeachers(){
+		Iterable<Teacher> result = teacherRepo.findAll();
+		
+		List<Teacher> retList = new ArrayList<Teacher>();
+		Iterator<Teacher> iter = result.iterator();
+		while(iter.hasNext()){
+			retList.add(iter.next());
+		}
+		
+		
+		return retList;
+	}
+	
 }
