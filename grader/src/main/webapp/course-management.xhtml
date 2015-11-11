@@ -13,13 +13,13 @@
 		<title>Grader -- Admin Course Management</title>
 	</h:head>
 	<h:body>
-			<prime:panel header="Grader Course Admin Management" >
+			<prime:panel header="Grader Course Admin Management">
 				<div style="height:50px">
 					Choose one of the activities below to work with!
 				</div>
 			</prime:panel>
 			<prime:messages id="messages" showDetail="true" autoUpdate="true"/>
-			<prime:panel header="Create Semesters">
+			<prime:panel header="Create Semesters" toggleable="true" collapsed="true">
 				Create a semester below!
 				<h:form id="semester_form">
 					<h:panelGrid columns="2">
@@ -32,10 +32,10 @@
 							<f:selectItem itemLabel="Summer" itemValue="Summer"/>
 						</prime:selectOneMenu>
 					</h:panelGrid>
-					<prime:commandButton id="semester_btn" value="Create Semester" action="#{courseManageBean.createSemester}" process="@form" update="@all"/>
+					<prime:commandButton id="semester_btn" value="Create Semester" action="#{courseManageBean.createSemester}" process="@form" ajax="false"/>
 				</h:form>
 			</prime:panel>
-			<prime:panel header="Create Course">
+			<prime:panel header="Create Course" toggleable="true" collapsed="true">
 				Create a new course below!
 				<h:form id="course_form">
 					<h:panelGrid columns="2">
@@ -44,10 +44,10 @@
 						<h:outputText value="Course Name: "/>
 						<prime:inputText id="course_name_input" value="#{courseManageBean.courseName}"/>
 					</h:panelGrid>
-					<prime:commandButton id="course_btn" value="Create Course" action="#{courseManageBean.createCourse}" process="@form" update="@all"/>
+					<prime:commandButton id="course_btn" value="Create Course" action="#{courseManageBean.createCourse}" process="@form" ajax="false"/>
 				</h:form>
 			</prime:panel>
-			<prime:panel header="Assign a Teacher">
+			<prime:panel header="Assign a Teacher" toggleable="true" collapsed="true">
 				Create a course instance below.
 				<h:form id="instance_form">
 					<h:panelGrid columns="2">
@@ -64,8 +64,59 @@
 							<f:selectItems value="#{courseManageBean.teacherSelect}"/>
 						</prime:selectOneMenu>
 					</h:panelGrid>
-					<prime:commandButton id="instance_btn" value="Create Instance" action="#{courseManageBean.createCourseInstance}" process="@form" update="@all"/>
+					<prime:commandButton id="instance_btn" value="Create Instance" action="#{courseManageBean.createCourseInstance}" process="@form" ajax="false"/>
 				</h:form>
+			</prime:panel>
+			<prime:panel header="Enroll Students" toggleable="true" collapsed="true">
+				Enroll students in the form below:
+				<h:form id="enrollment_form">
+					<h:panelGrid columns="2">
+						<h:outputText value="Course: "/>
+						<prime:selectOneMenu id="course_select_menu" filter="true" filterMatchMode="startsWith" value="#{courseManageBean.enrollmentCourseSemester}">
+							<f:selectItems value="#{courseManageBean.courseInstancesSelect}"/>
+						</prime:selectOneMenu>
+						<h:outputText value="Select Students"/>
+						<prime:selectManyMenu id="enrollment_select" value="#{courseManageBean.selectedStudents}" filter="true" filterMatchMode="contains"
+								showCheckbox="true">
+							<f:selectItems value="#{courseManageBean.studentSelect}"/>
+						</prime:selectManyMenu>
+					</h:panelGrid>
+					<prime:commandButton id="enroll_btn" value="Enroll Students" action="#{courseManageBean.enrollStudents}" process="@form" ajax="false"/>
+				</h:form>
+			</prime:panel>
+			<prime:panel header="Created Courses">
+				<prime:dataTable id="course_table" var="course_instance" value="#{courseManageBean.courseInstances}">
+					<f:facet name="header">
+			            Expand rows to view students' enrollment.
+			        </f:facet>
+			        <prime:column style="width:16px">
+			            <prime:rowToggler />
+			        </prime:column>
+			        
+			        <prime:column headerText="Semester">
+			        	<h:outputText value="#{course_instance.semester}"/>
+			        </prime:column>
+			        
+			        <prime:column headerText="Code">
+			        	<h:outputText value="#{course_instance.course.courseCode}"/>
+			        </prime:column>
+			        
+			        <prime:column headerText="Course">
+			        	<h:outputText value="#{course_instance.course.courseName}"/>
+			        </prime:column>
+			        
+			        <prime:column headerText="Teacher">
+			        	<h:outputText value="#{course_instance.teacher}"/>
+			        </prime:column>
+			        
+			        <prime:rowExpansion>
+			        	<prime:dataTable var="enrolledStudent" value="#{course_instance.enrollments}">
+			        		<prime:column headerText="Name">
+			        			<h:outputText value="#{enrolledStudent.student}"/>
+			        		</prime:column>
+			        	</prime:dataTable>
+			        </prime:rowExpansion>
+				</prime:dataTable>
 			</prime:panel>
 	</h:body>
 </f:view>

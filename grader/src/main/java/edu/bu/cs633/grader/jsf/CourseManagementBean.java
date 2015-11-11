@@ -13,7 +13,9 @@ import javax.faces.model.SelectItem;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.bu.cs633.grader.entity.Course;
+import edu.bu.cs633.grader.entity.CourseSemester;
 import edu.bu.cs633.grader.entity.Semester;
+import edu.bu.cs633.grader.entity.Student;
 import edu.bu.cs633.grader.entity.Teacher;
 import edu.bu.cs633.grader.service.CourseService;
 import edu.bu.cs633.grader.service.UserService;
@@ -41,6 +43,9 @@ public class CourseManagementBean {
 	private int selectedSemester;
 	private int selectedTeacher;
 	
+	private int selectedCourseSemester;
+	private int enrollmentCourseSemester;
+	
 	private List<Course> availableCourses;
 	private List<Semester> availableSemesters;
 	private List<Teacher> availableTeachers;
@@ -49,11 +54,24 @@ public class CourseManagementBean {
 	private List<SelectItem> semesterSelect;
 	private List<SelectItem> teacherSelect;
 	
+	private List<SelectItem> courseInstancesSelect;
+	
+	private List<CourseSemester> courseInstances;
+	
+	private List<Student> allStudents;
+	private List<SelectItem> studentSelect;
+	private List<String> selectedStudents;
+	
 	@PostConstruct
 	public void init(){
+		//Populate drop downs
 		setAvailableCourses(courseService.getAllCourses());
 		setAvailableSemesters(courseService.getAllSemesters());
 		setAvailableTeachers(userService.getAllTeachers());
+		setAllStudents(userService.getAllStudents());
+		
+		//Populate our grid
+		setCourseInstances(courseService.getAllAvailableCourseInstances());
 		
 		createSelectItems();
 	}
@@ -62,6 +80,10 @@ public class CourseManagementBean {
 		courseSelect = new ArrayList<SelectItem>();
 		semesterSelect = new ArrayList<SelectItem>();
 		teacherSelect = new ArrayList<SelectItem>();
+		
+		courseInstancesSelect = new ArrayList<SelectItem>();
+		
+		studentSelect = new ArrayList<SelectItem>();
 		
 		for(Course c: getAvailableCourses()){
 			courseSelect.add(new SelectItem(c.getCourseId(), c.getCourseCode() + ":" + c.getCourseName()));
@@ -72,27 +94,42 @@ public class CourseManagementBean {
 		for(Teacher t: getAvailableTeachers()){
 			teacherSelect.add(new SelectItem(t.getTeacherId(), t.getUser().getLastName() + "," + t.getUser().getFirstName()));
 		}
+		for(CourseSemester cs: getCourseInstances()){
+			courseInstancesSelect.add(new SelectItem(cs.getCourseSemesterId(), cs.toString()));
+		}
+		for(Student st: getAllStudents()){
+			studentSelect.add(new  SelectItem(st.getStudentId(), st.toString()));
+		}
 	}
 
-	public void createSemester(){
+	public String createSemester(){
 		if(courseService.semesterExists(getYear(), getSelectSemester())){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Cannot create a Semester with year: " + year + " and semester: " + selectSemester, null));			
 		} else {
 			courseService.createSemester(getYear(), getSelectSemester());
 			setAvailableSemesters(courseService.getAllSemesters());
 		}
+		
+		//Refresh all data
+		init();
+		return null;
 	}
 	
-	public void createCourse(){
+	public String createCourse(){
 		if(courseService.courseExists(getCourseCode())){
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("The course with the course code " + getCourseCode() + " already exists!", null));			
 		} else {
 			courseService.createCourse(getCourseCode(), getCourseName());
 			setAvailableCourses(courseService.getAllCourses());
 		}
+		
+		//Refresh all data
+		init();
+		
+		return null;
 	}
 	
-	public void createCourseInstance(){
+	public String createCourseInstance(){
 		Teacher teacher = null;
 		for(Teacher t: getAvailableTeachers()){
 			if(t.getTeacherId() == selectedTeacher){
@@ -101,13 +138,13 @@ public class CourseManagementBean {
 		}
 		Course course = null;
 		for(Course t: getAvailableCourses()){
-			if(t.getCourseId() == selectedTeacher){
+			if(t.getCourseId() == selectedCourse){
 				course = t;
 			}
 		}
 		Semester semester = null;
 		for(Semester t: getAvailableSemesters()){
-			if(t.getSemesterId() == selectedTeacher){
+			if(t.getSemesterId() == selectedSemester){
 				semester = t;
 			}
 		}
@@ -118,6 +155,33 @@ public class CourseManagementBean {
 		} else {
 			courseService.createCourseInstance(teacher, course, semester);
 		}
+		
+		//Refresh all data
+		init();
+		
+		return null;
+	}
+	
+	/**
+	 * Enroll the selected students into the selected course.
+	 */
+	public String enrollStudents(){
+		List<Student> studentsToEnroll = new ArrayList<Student>();
+		
+		for(String id: selectedStudents){
+			studentsToEnroll.add(userService.getStudentById(Integer.parseInt(id)));
+		}
+		CourseSemester selected = null;
+		for(CourseSemester cs: getCourseInstances()){
+			if(cs.getCourseSemesterId() == enrollmentCourseSemester){
+				selected = cs;
+			}
+		}
+		
+		courseService.enrollStudentsInCourse(selected, studentsToEnroll);		
+		//Refresh all data
+		init();
+		return null;
 	}
 	
 	//Getters and Setters
@@ -304,6 +368,104 @@ public class CourseManagementBean {
 	 */
 	public void setTeacherSelect(List<SelectItem> teacherSelect) {
 		this.teacherSelect = teacherSelect;
+	}
+
+	/**
+	 * @return the courseInstances
+	 */
+	public List<CourseSemester> getCourseInstances() {
+		return courseInstances;
+	}
+
+	/**
+	 * @param courseInstances the courseInstances to set
+	 */
+	public void setCourseInstances(List<CourseSemester> courseInstances) {
+		this.courseInstances = courseInstances;
+	}
+
+	/**
+	 * @return the courseInstancesSelect
+	 */
+	public List<SelectItem> getCourseInstancesSelect() {
+		return courseInstancesSelect;
+	}
+
+	/**
+	 * @param courseInstancesSelect the courseInstancesSelect to set
+	 */
+	public void setCourseInstancesSelect(List<SelectItem> courseInstancesSelect) {
+		this.courseInstancesSelect = courseInstancesSelect;
+	}
+
+	/**
+	 * @return the selectedCourseSemester
+	 */
+	public int getSelectedCourseSemester() {
+		return selectedCourseSemester;
+	}
+
+	/**
+	 * @param selectedCourseSemester the selectedCourseSemester to set
+	 */
+	public void setSelectedCourseSemester(int selectedCourseSemester) {
+		this.selectedCourseSemester = selectedCourseSemester;
+	}
+
+	/**
+	 * @return the allStudents
+	 */
+	public List<Student> getAllStudents() {
+		return allStudents;
+	}
+
+	/**
+	 * @param allStudents the allStudents to set
+	 */
+	public void setAllStudents(List<Student> allStudents) {
+		this.allStudents = allStudents;
+	}
+
+	/**
+	 * @return the studentSelect
+	 */
+	public List<SelectItem> getStudentSelect() {
+		return studentSelect;
+	}
+
+	/**
+	 * @param studentSelect the studentSelect to set
+	 */
+	public void setStudentSelect(List<SelectItem> studentSelect) {
+		this.studentSelect = studentSelect;
+	}
+
+	/**
+	 * @return the selectedStudents
+	 */
+	public List<String> getSelectedStudents() {
+		return selectedStudents;
+	}
+
+	/**
+	 * @param selectedStudents the selectedStudents to set
+	 */
+	public void setSelectedStudents(List<String> selectedStudents) {
+		this.selectedStudents = selectedStudents;
+	}
+
+	/**
+	 * @return the enrollmentCourseSemester
+	 */
+	public int getEnrollmentCourseSemester() {
+		return enrollmentCourseSemester;
+	}
+
+	/**
+	 * @param enrollmentCourseSemester the enrollmentCourseSemester to set
+	 */
+	public void setEnrollmentCourseSemester(int enrollmentCourseSemester) {
+		this.enrollmentCourseSemester = enrollmentCourseSemester;
 	}
 
 }

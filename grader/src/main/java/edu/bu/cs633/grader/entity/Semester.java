@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,12 +27,18 @@ public class Semester {
 	private String semesterName;
 	private int year;
 	
-	@OneToMany(mappedBy = "semester", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "semester")
 	private List<CourseSemester> courseSemesters;
 	
 	public Semester(){
 		courseSemesters = new ArrayList<CourseSemester>();
 	}
+	
+	public String toString(){
+		return year + "-" + semesterName;
+	}
+	
+	//Getters and Setters
 
 	/**
 	 * @return the semesterId

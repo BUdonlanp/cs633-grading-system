@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,12 +31,18 @@ public class Teacher {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "teacher")
 	private List<CourseSemester> courseSemesters;
 
 	public Teacher() {
 		courseSemesters = new ArrayList<CourseSemester>();
 	}
+	
+	public String toString(){
+		return user.getLastName() + ", " + user.getFirstName();
+	}
+	
+	//Getters and Setters
 
 	/**
 	 * @return the teacherId

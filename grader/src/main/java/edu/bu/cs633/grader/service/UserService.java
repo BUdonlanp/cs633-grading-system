@@ -130,4 +130,19 @@ public class UserService {
 		return retList;
 	}
 	
+	public List<Student> getAllStudents(){
+		Iterable<Student> result = studentRepo.findAll();
+		
+		List<Student> retList = new ArrayList<Student>();
+		Iterator<Student> iter = result.iterator();
+		while(iter.hasNext()){
+			retList.add(iter.next());
+		}
+		
+		return retList;
+	}
+	
+	public Student getStudentById(Integer id){
+		return studentRepo.findOne(id);
+	}
 }

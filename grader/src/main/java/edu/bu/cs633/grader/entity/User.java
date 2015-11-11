@@ -5,7 +5,6 @@ package edu.bu.cs633.grader.entity;
 
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,13 +31,13 @@ public class User {
 
 	private String password;
 
-	@OneToOne(mappedBy="user", fetch=FetchType.EAGER)
+	@OneToOne(mappedBy="user")
 	private Admin admin;
 
-	@OneToOne(mappedBy="user", fetch=FetchType.EAGER)
+	@OneToOne(mappedBy="user")
 	private Teacher teacher;
 
-	@OneToOne(mappedBy="user", fetch=FetchType.EAGER)
+	@OneToOne(mappedBy="user")
 	private Student student;
 
 	/**

@@ -1,11 +1,15 @@
 package edu.bu.cs633.grader.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -19,7 +23,7 @@ import javax.persistence.Table;
 public class CourseSemester {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int courseSemesterId;
 
 	@ManyToOne
@@ -33,6 +37,17 @@ public class CourseSemester {
 	@ManyToOne
 	@JoinColumn(name = "teacher_id")
 	private Teacher teacher;
+
+	@OneToMany(mappedBy = "courseSemester", fetch = FetchType.EAGER)
+	private List<Enrollment> enrollments;
+
+	@OneToMany(mappedBy = "courseSemester")
+	private List<Assignment> assignments;
+
+	public String toString() {
+		return semester.toString() + " : " + course.getCourseCode() + " : "
+				+ teacher.toString();
+	}
 
 	/**
 	 * @return the courseSemesterId
@@ -92,6 +107,36 @@ public class CourseSemester {
 	 */
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
+	}
+
+	/**
+	 * @return the enrollments
+	 */
+	public List<Enrollment> getEnrollments() {
+		return enrollments;
+	}
+
+	/**
+	 * @param enrollments
+	 *            the enrollments to set
+	 */
+	public void setEnrollments(List<Enrollment> enrollments) {
+		this.enrollments = enrollments;
+	}
+
+	/**
+	 * @return the assignments
+	 */
+	public List<Assignment> getAssignments() {
+		return assignments;
+	}
+
+	/**
+	 * @param assignments
+	 *            the assignments to set
+	 */
+	public void setAssignments(List<Assignment> assignments) {
+		this.assignments = assignments;
 	}
 
 }

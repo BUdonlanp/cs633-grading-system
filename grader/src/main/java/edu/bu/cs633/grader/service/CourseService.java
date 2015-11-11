@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 
 import edu.bu.cs633.grader.entity.Course;
 import edu.bu.cs633.grader.entity.CourseSemester;
+import edu.bu.cs633.grader.entity.Enrollment;
 import edu.bu.cs633.grader.entity.Semester;
+import edu.bu.cs633.grader.entity.Student;
 import edu.bu.cs633.grader.entity.Teacher;
 import edu.bu.cs633.grader.repository.CourseRepository;
 import edu.bu.cs633.grader.repository.CourseSemesterRepository;
+import edu.bu.cs633.grader.repository.EnrollmentRepository;
 import edu.bu.cs633.grader.repository.SemesterRepository;
 
 /**
@@ -30,6 +33,8 @@ public class CourseService {
 	private SemesterRepository semesterRepository;
 	@Autowired
 	private CourseSemesterRepository courseSemesterRepository;
+	@Autowired
+	private EnrollmentRepository enrollmentRepository;
 
 	public boolean courseExists(String courseCode) {
 		Course course = courseRepository.findByCourseCode(courseCode);
@@ -131,6 +136,39 @@ public class CourseService {
 					+ e.getMessage());
 		}
 		return instance;
+	}
+	
+	
+	public List<CourseSemester> getAllAvailableCourseInstances(){
+		List<CourseSemester> courseInstances = new ArrayList<CourseSemester>();
+		
+		Iterable<CourseSemester> foundItems = courseSemesterRepository.findAll();
+		Iterator<CourseSemester> iter = foundItems.iterator();
+		
+		while(iter.hasNext()){
+			courseInstances.add(iter.next());
+		}
+		
+		return courseInstances;
+	}
+	
+	public List<Enrollment> enrollStudentsInCourse(CourseSemester instance, List<Student> students){
+		List<Enrollment> newEnrollments = new ArrayList<Enrollment>();
+		
+		for(Student s: students){			
+			try {
+				Enrollment enroll = new Enrollment();
+				enroll.setCourseSemester(instance);
+				enroll.setStudent(s);
+				
+				enrollmentRepository.save(enroll);
+			} catch (Exception e){
+				System.out.println("Could not enroll " + s);
+				System.out.println("Error was: " + e.getMessage());
+			}
+		}
+		
+		return newEnrollments;
 	}
 
 }
