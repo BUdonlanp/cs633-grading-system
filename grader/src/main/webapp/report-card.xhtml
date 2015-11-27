@@ -1,0 +1,43 @@
+<f:view xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ng="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:prime="http://primefaces.org/ui">
+	
+	<f:event type="preRenderView" listener="#{userSessionBean.forwardToIndexForStudentPage}"/>
+	
+	<h:head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>Grader -- Report Card</title>
+	</h:head>
+	<h:body>
+			<prime:messages id="messages" showDetail="true" autoUpdate="true"/>
+			<prime:panel header="View Grades">
+				<prime:dataTable id="grade_table" var="reportCard" value="#{reportCardBean.reportCards}">
+					<prime:column style="width:16px">
+						<prime:rowToggler/>
+					</prime:column>
+					<prime:column headerText="Course">
+						<h:outputText value="#{reportCard.courseName}"/>
+					</prime:column>
+					<prime:column headerText="Current Grade">
+						<h:outputText value="#{reportCard.finalGrade}%"/>
+					</prime:column>
+					
+					<prime:rowExpansion>
+						<prime:dataTable var="grade" value="#{reportCard.grades}">
+							<prime:column headerText="Assignment">
+								<h:outputText value="#{grade.assignmentName}"/>
+							</prime:column>
+							<prime:column headerText="Grade">
+								<h:outputText value="#{grade.percentage}%"/>
+							</prime:column>
+						</prime:dataTable>
+					</prime:rowExpansion>
+					
+				</prime:dataTable>
+			</prime:panel>
+	</h:body>
+</f:view>

@@ -1,0 +1,39 @@
+<f:view xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ng="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:prime="http://primefaces.org/ui">
+	
+	<f:event type="preRenderView" listener="#{userSessionBean.forwardToIndexForTeacherPage}"/>
+	
+	<h:head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>Grader -- Teacher Grade Management</title>
+	</h:head>
+	<h:body>
+			<prime:panel header="Grader Grade">
+				<div style="height:50px">
+					Enter students grades below!
+				</div>
+			</prime:panel>
+			<prime:messages id="messages" showDetail="true" autoUpdate="true"/>
+			<prime:panel header="#{createAssignmentBean.currentUser.selectedAssignment.assignmentName}">
+				<h:form id="grade_form">
+					<prime:dataTable id="grade_table" var="grade" value="#{createAssignmentBean.currentUser.selectedAssignment.grades}">
+						<prime:column headerText="Student">
+							<h:outputText value="#{grade.enrollment.student}"/>
+						</prime:column>
+						<prime:column headerText="Grade">
+							<prime:inputText value="#{grade.pointsGraded}"/>
+						</prime:column>
+						<prime:column headerText="Points available">
+							<h:outputText value="#{createAssignmentBean.currentUser.selectedAssignment.assignmentTotalPoints}"/>
+						</prime:column>
+					</prime:dataTable>
+					<prime:commandButton id="grade_save_btn" value="Save Grades" actionListener="#{createAssignmentBean.saveGrades}" action="grade-management"/>
+				</h:form>
+			</prime:panel>
+	</h:body>
+</f:view>

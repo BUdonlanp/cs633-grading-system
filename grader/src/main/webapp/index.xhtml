@@ -32,6 +32,8 @@
 				<prime:panel header="Available Actions">
 					<h:panelGrid columns="1">
 						<h:link value="Admin Course Management" rendered="#{userSessionBean.isAdmin}" outcome="course-management"/>
+						<h:link value="Teacher Grade Management" rendered="#{userSessionBean.isTeacher}" outcome="grade-management"/>
+						<h:link value="Report Card" rendered="#{userSessionBean.isStudent}" outcome="report-card"/>
 					</h:panelGrid>
 				</prime:panel>
 				<prime:panel header="Add a new user!" rendered="#{userSessionBean.isAdmin}">

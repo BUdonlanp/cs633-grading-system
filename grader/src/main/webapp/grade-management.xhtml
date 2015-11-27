@@ -1,0 +1,55 @@
+<f:view xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ng="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:prime="http://primefaces.org/ui">
+	
+	<f:event type="preRenderView" listener="#{userSessionBean.forwardToIndexForTeacherPage}"/>
+	
+	<h:head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>Grader -- Teacher Grade Management</title>
+	</h:head>
+	<h:body>
+			<prime:panel header="Grader Course Grading Management">
+				<div style="height:50px">
+					Choose one of the activities below to work with!
+				</div>
+			</prime:panel>
+			<prime:messages id="messages" showDetail="true" autoUpdate="true"/>
+			<prime:panel header="Create an Assignment">
+				<h:form id="create_assignment_form">
+					<h:panelGrid columns="2">
+						<h:outputText value="Course: "/>
+						<prime:selectOneMenu id="course_select_menu" filter="true" filterMatchMode="startsWith" value="#{createAssignmentBean.selectedCourseSemester}">
+							<f:selectItems value="#{createAssignmentBean.courseInstancesSelect}"/>
+						</prime:selectOneMenu>
+						<h:outputText value="Assignment Name: "/>
+						<prime:inputText id="assigment_name" value="#{createAssignmentBean.assignmentName}"/>
+						<h:outputText value="Total points worth: "/>
+						<prime:spinner id="score_spinner" value="#{createAssignmentBean.availablePoints}"/>
+					</h:panelGrid>
+					<prime:commandButton id="save_assignment_btn" value="Save Assignment" ajax="false" actionListener="#{createAssignmentBean.saveAssignment}"/>
+				</h:form>
+			</prime:panel>
+			<prime:panel header="Manage Grades">
+				Click the Assignment ID to edit the grades!
+				<prime:dataTable id="assignment_table" var="assignment" value="#{createAssignmentBean.assignments}">
+					<prime:column headerText="Assignment ID">
+						<prime:commandLink actionListener="#{createAssignmentBean.editGrades(assignment.assignmentId)}" action="grade" value="#{assignment.assignmentId}"/>
+					</prime:column>
+					<prime:column headerText="Course">
+						<h:outputText value="#{assignment.courseSemester}"/>
+					</prime:column>
+					<prime:column headerText="Assignment Name">
+						<h:outputText value="#{assignment.assignmentName}"/>
+					</prime:column>
+					<prime:column headerText="Points">
+						<h:outputText value="#{assignment.assignmentTotalPoints}"/>
+					</prime:column>
+				</prime:dataTable>
+			</prime:panel>
+	</h:body>
+</f:view>

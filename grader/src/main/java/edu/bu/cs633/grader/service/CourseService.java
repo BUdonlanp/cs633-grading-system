@@ -7,15 +7,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.bu.cs633.grader.entity.Assignment;
 import edu.bu.cs633.grader.entity.Course;
 import edu.bu.cs633.grader.entity.CourseSemester;
 import edu.bu.cs633.grader.entity.Enrollment;
+import edu.bu.cs633.grader.entity.Grade;
 import edu.bu.cs633.grader.entity.Semester;
 import edu.bu.cs633.grader.entity.Student;
 import edu.bu.cs633.grader.entity.Teacher;
 import edu.bu.cs633.grader.repository.CourseRepository;
 import edu.bu.cs633.grader.repository.CourseSemesterRepository;
 import edu.bu.cs633.grader.repository.EnrollmentRepository;
+import edu.bu.cs633.grader.repository.GradeRepository;
 import edu.bu.cs633.grader.repository.SemesterRepository;
 
 /**
@@ -35,6 +38,8 @@ public class CourseService {
 	private CourseSemesterRepository courseSemesterRepository;
 	@Autowired
 	private EnrollmentRepository enrollmentRepository;
+	@Autowired
+	private GradeRepository gradeRepo;
 
 	public boolean courseExists(String courseCode) {
 		Course course = courseRepository.findByCourseCode(courseCode);
@@ -162,6 +167,15 @@ public class CourseService {
 				enroll.setStudent(s);
 				
 				enrollmentRepository.save(enroll);
+				
+				//Set grade for each assignment in that course
+				for(Assignment a: instance.getAssignments()){
+					Grade g = new Grade();
+					g.setAssignment(a);
+					g.setEnrollment(enroll);
+					
+					gradeRepo.save(g);
+				}
 			} catch (Exception e){
 				System.out.println("Could not enroll " + s);
 				System.out.println("Error was: " + e.getMessage());
@@ -170,5 +184,15 @@ public class CourseService {
 		
 		return newEnrollments;
 	}
+	
+	public List<CourseSemester> getCoursesForTeacher(Teacher teach){
+		List<CourseSemester> courses = new ArrayList<CourseSemester>();
+		courses.addAll(courseSemesterRepository.findByTeacher(teach));
+		return courses;
+	}
 
+	public List<Enrollment> getStudentEnrollments(Student s){
+		return enrollmentRepository.findByStudent(s);
+	}
+	
 }

@@ -1,5 +1,7 @@
 package edu.bu.cs633.grader.repository;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
 import edu.bu.cs633.grader.entity.Course;
@@ -15,4 +17,6 @@ public interface CourseSemesterRepository extends CrudRepository<CourseSemester,
 
 	public CourseSemester findByTeacherAndCourseAndSemester(Teacher teacher, Course course, Semester semester);
 	
+	
+	public List<CourseSemester> findByTeacher(Teacher teacher);
 }

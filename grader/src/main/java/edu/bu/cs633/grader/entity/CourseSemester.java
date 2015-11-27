@@ -41,7 +41,7 @@ public class CourseSemester {
 	@OneToMany(mappedBy = "courseSemester", fetch = FetchType.EAGER)
 	private List<Enrollment> enrollments;
 
-	@OneToMany(mappedBy = "courseSemester")
+	@OneToMany(mappedBy = "courseSemester", fetch = FetchType.EAGER)
 	private List<Assignment> assignments;
 
 	public String toString() {

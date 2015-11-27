@@ -8,6 +8,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
+import edu.bu.cs633.grader.entity.Assignment;
 import edu.bu.cs633.grader.entity.User;
 
 /**
@@ -20,6 +21,8 @@ import edu.bu.cs633.grader.entity.User;
 public class UserSessionBean {
 
 	private User currentUser;
+	
+	private Assignment selectedAssignment;
 	
 	//Session checks for redirects
 	
@@ -40,6 +43,38 @@ public class UserSessionBean {
 	public void forwardToIndexForAdminPage(ComponentSystemEvent cse){
 		if(isLoggedIn()){
 			if(!getIsAdmin()){
+				FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(
+						FacesContext.getCurrentInstance(), 
+						null, 
+						"/index.jsf?faces-redirect=true");
+			}
+		} else {
+			FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(
+					FacesContext.getCurrentInstance(), 
+					null, 
+					"/login.jsf?faces-redirect=true");
+		}
+	}
+	
+	public void forwardToIndexForTeacherPage(ComponentSystemEvent cse){
+		if(isLoggedIn()){
+			if(!getIsTeacher()){
+				FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(
+						FacesContext.getCurrentInstance(), 
+						null, 
+						"/index.jsf?faces-redirect=true");
+			}
+		} else {
+			FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(
+					FacesContext.getCurrentInstance(), 
+					null, 
+					"/login.jsf?faces-redirect=true");
+		}
+	}
+	
+	public void forwardToIndexForStudentPage(ComponentSystemEvent cse){
+		if(isLoggedIn()){
+			if(!getIsStudent()){
 				FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(
 						FacesContext.getCurrentInstance(), 
 						null, 
@@ -89,6 +124,20 @@ public class UserSessionBean {
 	 */
 	public void setCurrentUser(User currentUser) {
 		this.currentUser = currentUser;
+	}
+
+	/**
+	 * @return the selectedAssignment
+	 */
+	public Assignment getSelectedAssignment() {
+		return selectedAssignment;
+	}
+
+	/**
+	 * @param selectedAssignment the selectedAssignment to set
+	 */
+	public void setSelectedAssignment(Assignment selectedAssignment) {
+		this.selectedAssignment = selectedAssignment;
 	}
 	
 }

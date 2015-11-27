@@ -9,8 +9,10 @@ import org.springframework.context.annotation.Scope;
 
 import edu.bu.cs633.grader.jsf.AdminBean;
 import edu.bu.cs633.grader.jsf.CourseManagementBean;
+import edu.bu.cs633.grader.jsf.CreateAssignmentBean;
 import edu.bu.cs633.grader.jsf.IndexBean;
 import edu.bu.cs633.grader.jsf.LoginBean;
+import edu.bu.cs633.grader.jsf.ReportCardBean;
 import edu.bu.cs633.grader.jsf.UserSessionBean;
 
 /**
@@ -48,6 +50,18 @@ public class JsfConfig {
 	@Scope(value="request")
 	public CourseManagementBean courseManageBean(){
 		return new CourseManagementBean();
+	}
+	
+	@Bean
+	@Scope(value="request")
+	public CreateAssignmentBean createAssignmentBean(){
+		return new CreateAssignmentBean();
+	}
+	
+	@Bean
+	@Scope(value="request")
+	public ReportCardBean reportCardBean(){
+		return new ReportCardBean();
 	}
 	
 }

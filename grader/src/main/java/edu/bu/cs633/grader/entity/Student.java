@@ -6,6 +6,7 @@ package edu.bu.cs633.grader.entity;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -67,6 +68,20 @@ public class Student {
 	 */
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	/**
+	 * @return the enrollments
+	 */
+	public List<Enrollment> getEnrollments() {
+		return enrollments;
+	}
+
+	/**
+	 * @param enrollments the enrollments to set
+	 */
+	public void setEnrollments(List<Enrollment> enrollments) {
+		this.enrollments = enrollments;
 	}
 	
 }
